@@ -35,7 +35,7 @@ func NewBadRequestError(message string) *RestErr {
 	}
 }
 
-func newBadRequestValidationError(message string, causes []Causes) *RestErr {
+func NewBadRequestValidationError(message string, causes []Causes) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     "bad_request",
