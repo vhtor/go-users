@@ -5,10 +5,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	logger "github.com/vhtor/metaifrn-simulados-api/src/configuration/log"
 	"github.com/vhtor/metaifrn-simulados-api/src/controller/routes"
 )
 
 func main() {
+
+	logger.Info("Starting application")
 
 	err := godotenv.Load()
 	if err != nil {
