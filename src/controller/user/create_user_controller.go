@@ -8,7 +8,12 @@ import (
 	"github.com/vhtor/metaifrn-simulados-api/src/configuration/validation"
 	"github.com/vhtor/metaifrn-simulados-api/src/controller/model/request"
 	"github.com/vhtor/metaifrn-simulados-api/src/controller/model/response"
+	model "github.com/vhtor/metaifrn-simulados-api/src/model"
+	"github.com/vhtor/metaifrn-simulados-api/src/model/service"
 	"go.uber.org/zap"
+)
+
+var (
 )
 
 func CreateUser(ctx *gin.Context) {
@@ -28,6 +33,19 @@ func CreateUser(ctx *gin.Context) {
 		restErr := validation.ValidateUserError(err)
 
 		ctx.JSON(restErr.Code, restErr)
+		return
+	}
+
+	domain := model.NewUser(
+		userRequest.Email,
+		userRequest.Password,
+		userRequest.Name,
+		userRequest.Age,
+	)
+
+	service := service.NewUserService()
+	if err := service.CreateUser(domain); err != nil {
+		ctx.JSON(err.Code, err)
 		return
 	}
 

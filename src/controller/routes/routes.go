@@ -2,7 +2,7 @@ package routes
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/vhtor/metaifrn-simulados-api/src/controller"
+	controller "github.com/vhtor/metaifrn-simulados-api/src/controller/user"
 )
 
 func InitRoutes(router *gin.RouterGroup) {
