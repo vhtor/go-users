@@ -1,4 +1,4 @@
-package controller
+package user_controller
 
 import (
 	"net/http"
@@ -7,16 +7,12 @@ import (
 	logger "github.com/vhtor/metaifrn-simulados-api/src/configuration/log"
 	"github.com/vhtor/metaifrn-simulados-api/src/configuration/validation"
 	"github.com/vhtor/metaifrn-simulados-api/src/controller/model/request"
-	"github.com/vhtor/metaifrn-simulados-api/src/controller/model/response"
-	model "github.com/vhtor/metaifrn-simulados-api/src/model"
-	"github.com/vhtor/metaifrn-simulados-api/src/model/service"
+	"github.com/vhtor/metaifrn-simulados-api/src/model"
+	"github.com/vhtor/metaifrn-simulados-api/src/view/convert"
 	"go.uber.org/zap"
 )
 
-var (
-)
-
-func CreateUser(ctx *gin.Context) {
+func (controller *userControllerInterface) CreateUser(ctx *gin.Context) {
 	logger.Info(
 		"Init CreateUser controller",
 		zap.String("journey", "createUser"))
@@ -43,17 +39,9 @@ func CreateUser(ctx *gin.Context) {
 		userRequest.Age,
 	)
 
-	service := service.NewUserService()
-	if err := service.CreateUser(domain); err != nil {
+	if err := controller.service.CreateUser(domain); err != nil {
 		ctx.JSON(err.Code, err)
 		return
-	}
-
-	response := response.UserResponse{
-		ID:    "1",
-		Email: userRequest.Email,
-		Name:  userRequest.Name,
-		Age:   userRequest.Age,
 	}
 
 	logger.Info(
@@ -61,5 +49,5 @@ func CreateUser(ctx *gin.Context) {
 		zap.String("journey", "createUser"),
 	)
 
-	ctx.JSON(http.StatusCreated, response)
+	ctx.JSON(http.StatusCreated, convert.ConvertUserDomainToResponse(domain))
 }
