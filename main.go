@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/vhtor/metaifrn-simulados-api/src/configuration/database/mongodb"
 	logger "github.com/vhtor/metaifrn-simulados-api/src/configuration/log"
 	"github.com/vhtor/metaifrn-simulados-api/src/controller/routes"
 	user_controller "github.com/vhtor/metaifrn-simulados-api/src/controller/user"
@@ -19,6 +20,9 @@ func main() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
+
+	// Init database connection
+	mongodb.InitConnection()
 
 	// Init dependencies
 	service := service.NewUserService()
