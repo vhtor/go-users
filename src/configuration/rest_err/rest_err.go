@@ -44,7 +44,7 @@ func NewBadRequestValidationError(message string, causes []Causes) *RestErr {
 	}
 }
 
-func newUnauthorizedRequestError(message string) *RestErr {
+func NewUnauthorizedRequestError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     "unauthorized",
@@ -52,7 +52,7 @@ func newUnauthorizedRequestError(message string) *RestErr {
 	}
 }
 
-func newInternalServerError(message string) *RestErr {
+func NewInternalServerError(message string) *RestErr {
 	return &RestErr{
 		Message: message,
 		Err:     "internal_server_error",
