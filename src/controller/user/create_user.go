@@ -41,12 +41,19 @@ func (controller *userControllerInterface) CreateUser(ctx *gin.Context) {
 
 	domainResult, err := controller.service.CreateUser(domain); 
 	if err != nil {
+		logger.Error(
+			"Error trying to call CreateUser service",
+			err,
+			zap.String("journey", "createUser"),
+		)
+
 		ctx.JSON(err.Code, err)
 		return
 	}
 
 	logger.Info(
 		"User created successfully:",
+		zap.String("userId", domainResult.GetID()),
 		zap.String("journey", "createUser"),
 	)
 

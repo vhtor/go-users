@@ -16,6 +16,9 @@ func (user *userService) CreateUser(
 	userDomain.EncryptPassword()
 
 	userRepository, err := user.userRepository.CreateUser(userDomain)
+	if err != nil {
+		
+	}
 
 	return userRepository, err
 }
