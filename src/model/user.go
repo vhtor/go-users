@@ -3,27 +3,24 @@ package model
 import (
 	"crypto/md5"
 	"encoding/hex"
-	"encoding/json"
-	"fmt"
 )
 
 type user struct {
-	ID       string `json:"id"`
-	Email    string `json:"email"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-	Age      int8   `json:"age"`
+	id       string
+	email    string
+	password string
+	name     string
+	age      int8
 }
 
 type UserInterface interface {
+	GetID() string
 	GetEmail() string
 	GetPassword() string
 	GetName() string
 	GetAge() int8
 
 	SetID(string)
-
-	GetJSONValue() (string, error)
 
 	EncryptPassword()
 }
@@ -33,50 +30,44 @@ func NewUser(
 	age int8,
 ) UserInterface {
 	return &user{
-		Email:    email,
-		Password: password,
-		Name:     name,
-		Age:      age,
+		email:    email,
+		password: password,
+		name:     name,
+		age:      age,
 	}
+}
+
+func (user *user) GetID() string {
+	return user.id
+} 
+
+func (user *user) SetID(id string) {
+	user.id = id
 }
 
 func (user *user) GetEmail() string {
-	return user.Email
+	return user.email
 }
 
 func (user *user) GetPassword() string {
-	return user.Password
+	return user.password
 }
 
 func (user *user) GetName() string {
-	return user.Name
+	return user.name
 }
 
 func (user *user) GetAge() int8 {
-	return user.Age
-}
-
-func (user *user) SetID(id string) {
-	user.ID = id
-}
-
-func (user *user) GetJSONValue() (string, error) {
-	json, err := json.Marshal(user)
-	if err != nil {
-		fmt.Println(err)
-		return "", err
-	}
-
-	return string(json), nil
+	return user.age
 }
 
 func (user *user) EncryptPassword() {
 	hash := md5.New()
 	defer hash.Reset()
 
-	hash.Write([]byte(user.Password))
+	hash.Write([]byte(user.password))
 
 	// Exchanging original user password for the encrypted version
 	// to compare it with the encrypted database password
-	user.Password = hex.EncodeToString(hash.Sum(nil))
+	user.password = hex.EncodeToString(hash.Sum(nil))
 }

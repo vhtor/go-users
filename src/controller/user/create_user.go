@@ -39,7 +39,8 @@ func (controller *userControllerInterface) CreateUser(ctx *gin.Context) {
 		userRequest.Age,
 	)
 
-	if err := controller.service.CreateUser(domain); err != nil {
+	domainResult, err := controller.service.CreateUser(domain); 
+	if err != nil {
 		ctx.JSON(err.Code, err)
 		return
 	}
@@ -49,5 +50,5 @@ func (controller *userControllerInterface) CreateUser(ctx *gin.Context) {
 		zap.String("journey", "createUser"),
 	)
 
-	ctx.JSON(http.StatusCreated, convert.ConvertUserDomainToResponse(domain))
+	ctx.JSON(http.StatusCreated, convert.UserDomainToResponse(domainResult))
 }

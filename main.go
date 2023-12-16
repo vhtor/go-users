@@ -1,13 +1,16 @@
 package main
 
 import (
+	"context"
 	"log"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/vhtor/metaifrn-simulados-api/src/configuration/database/mongodb"
 	logger "github.com/vhtor/metaifrn-simulados-api/src/configuration/log"
 	"github.com/vhtor/metaifrn-simulados-api/src/controller/routes"
 	user_controller "github.com/vhtor/metaifrn-simulados-api/src/controller/user"
+	"github.com/vhtor/metaifrn-simulados-api/src/model/repository"
 	"github.com/vhtor/metaifrn-simulados-api/src/model/service"
 )
 
@@ -21,10 +24,15 @@ func main() {
 	}
 
 	// Init database connection
-	//mongodb.InitConnection()
+	database, err := mongodb.NewMongoDBConnection(context.Background())
+	if err != nil {
+		log.Fatalf("Error trying to connect to database, error: %s", err.Error())
+		return
+	}
 
 	// Init dependencies
-	service := service.NewUserService()
+	repository := repository.NewUserRepository(database)
+	service := service.NewUserService(repository)
 	userController := user_controller.NewUserControllerInterface(service)
 
 	router := gin.Default()

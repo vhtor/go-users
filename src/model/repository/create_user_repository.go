@@ -7,6 +7,8 @@ import (
 	logger "github.com/vhtor/metaifrn-simulados-api/src/configuration/log"
 	resterr "github.com/vhtor/metaifrn-simulados-api/src/configuration/rest_err"
 	"github.com/vhtor/metaifrn-simulados-api/src/model"
+	"github.com/vhtor/metaifrn-simulados-api/src/model/repository/entity/converter"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -22,17 +24,14 @@ func (repository *userRepository) CreateUser(
 	collection_name := os.Getenv(MONGODB_USER_COLLECTION)
 	collection := repository.databaseConnection.Collection(collection_name)
 
-	userJSON, err := user.GetJSONValue(); 
-	
-	if err != nil {
-		 return nil, resterr.NewInternalServerError(err.Error())
-	}
+	userEntity := converter.DomainToEntity(user)
 
-	result, err := collection.InsertOne(context.Background(), userJSON)
+	result, err := collection.InsertOne(context.Background(), userEntity)
 	if err != nil {
 		return nil, resterr.NewInternalServerError(err.Error())
  	}
 
-	user.SetID(result.InsertedID.(string))
-	return user, nil
+	userEntity.ID = result.InsertedID.(primitive.ObjectID)
+
+	return converter.EntityToDomain(*userEntity), nil
 }
